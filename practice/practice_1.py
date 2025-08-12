@@ -12,3 +12,7 @@ def add_task(task):
 add_task("海に行く")
 add_task("勉強をする")
 add_task("本を読む")
+
+# --- 課題② ---
+# todo_list の中身をすべて表示する関数 show_tasks() を作ろう
+# タスクが何もなければ「タスクはありません」と表示するようにしてね
