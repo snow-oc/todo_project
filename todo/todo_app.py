@@ -36,12 +36,20 @@ def mark_done(task):
     else:
         print("そのタスクは見つかりません")
 
+def check_upcoming(days):
+    for task, task_detail in todo_list.items():
+        deadline_date = datetime.datetime.fromisoformat(task_detail["deadline"]).date()
+        if 0 <= (deadline_date - today).days <= days:
+            print(f"タスク'{task}'の期限が近づいています。 期限: {task_detail["deadline"]}")
+
 # 動作確認
 add_task("買い物に行く", "2025-08-17")
 add_task("読書をする", "2025-08-16")
+add_task("デート", "2025-08-20")
 show_tasks()
 check_deadlines()
 mark_done("読書をする")
 show_tasks()
 remove_task("買い物に行く")
 remove_task("サッカー観戦")
+check_upcoming(3)
