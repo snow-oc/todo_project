@@ -21,9 +21,8 @@ def remove_task(task):
 
 import datetime
 
-today = datetime.date.today()
-
 def check_deadlines():
+    today = datetime.date.today()
     for task, task_detail in todo_list.items():
         deadline_date = datetime.datetime.fromisoformat(task_detail["deadline"]).date()
         if deadline_date < today:
@@ -37,15 +36,24 @@ def mark_done(task):
         print("そのタスクは見つかりません")
 
 def check_upcoming(days):
-    for task, task_detail in todo_list.items():
-        deadline_date = datetime.datetime.fromisoformat(task_detail["deadline"]).date()
-        if 0 <= (deadline_date - today).days <= days:
-            print(f"タスク'{task}'の期限が近づいています。 期限: {task_detail["deadline"]}")
+    today = datetime.date.today()
+    upcoming = [(task, detail)
+                for task, detail in todo_list.items()
+                if 0 <= (datetime.datetime.fromisoformat(detail["deadline"]).date() - today).days <= days
+    ]
+    if upcoming:
+        for task, detail in upcoming:
+            remaining_days = (datetime.datetime.fromisoformat(detail["deadline"]).date() - today).days
+            print(f"タスク'{task}'の期限が近づいています。(あと{remaining_days}日) 期限: {detail['deadline']}")
+    else:
+        print("期限が近いタスクはありません")
+
 
 # 動作確認
 add_task("買い物に行く", "2025-08-17")
 add_task("読書をする", "2025-08-16")
 add_task("デート", "2025-08-20")
+add_task("ゲーム", "2025-08-21")
 show_tasks()
 check_deadlines()
 mark_done("読書をする")
