@@ -48,6 +48,17 @@ def check_upcoming(days):
     else:
         print("期限が近いタスクはありません")
 
+def edit_task(old_task, new_task=None, new_deadline=None):
+    if old_task not in todo_list:
+        print("そのタスクは見つかりません")
+        return
+    if new_task:
+        todo_list[new_task] = todo_list.pop(old_task)
+        print(f"タスク '{old_task}' を '{new_task}' へ更新しました")
+    if new_deadline:
+        target = new_task or old_task
+        todo_list[target]["deadline"] = new_deadline
+        print(f"タスク '{target}' の期限を {new_deadline} へ更新しました'")
 
 # 動作確認
 add_task("買い物に行く", "2025-08-17")
@@ -61,3 +72,8 @@ show_tasks()
 remove_task("買い物に行く")
 remove_task("サッカー観戦")
 check_upcoming(3)
+edit_task("仕事", new_task="Python勉強")
+edit_task("デート", new_task="Python勉強")
+edit_task("Python勉強", new_deadline="2025-09-01")
+edit_task(old_task="ゲーム", new_task="アクションゲーム", new_deadline="2025-09-20")
+show_tasks()
