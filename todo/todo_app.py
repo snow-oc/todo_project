@@ -60,6 +60,32 @@ def edit_task(old_task, new_task=None, new_deadline=None):
         todo_list[target]["deadline"] = new_deadline
         print(f"タスク '{target}' の期限を {new_deadline} へ更新しました'")
 
+def show_done_tasks():
+    done_task_list = [(task, detail) for task, detail in todo_list.items() if detail["done"]]
+    if done_task_list:
+        for task, detail in done_task_list:
+            print(f"[✓] タスク: {task}, 期限: {detail['deadline']}")
+    else:
+        print("完了のタスクはありません")
+
+def show_pending_tasks():
+    pending_task_list = [(task, detail) for task, detail in todo_list.items() if not detail["done"]]
+    if pending_task_list:
+        for task, detail in pending_task_list:
+            print(f"[ ] タスク: {task}, 期限: {detail['deadline']}")
+    else:
+        print("未完了のタスクはありません")
+
+def search_tasks(keyword):
+    found = False
+    for task, task_detail in todo_list.items():
+        if keyword in task:
+            print(f"[{'✓' if task_detail['done'] else ' '}] タスク: {task}, 期限: {task_detail['deadline']}")
+            found = True
+    if not found:
+        print("該当するタスクはありません")
+
+
 # 動作確認
 add_task("買い物に行く", "2025-08-17")
 add_task("読書をする", "2025-08-16")
@@ -77,3 +103,6 @@ edit_task("デート", new_task="Python勉強")
 edit_task("Python勉強", new_deadline="2025-09-01")
 edit_task(old_task="ゲーム", new_task="アクションゲーム", new_deadline="2025-09-20")
 show_tasks()
+show_done_tasks()
+show_pending_tasks()
+search_tasks("Python")
