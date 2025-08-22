@@ -85,6 +85,43 @@ def search_tasks(keyword):
     if not found:
         print("該当するタスクはありません")
 
+# --- 課題⑩ ---
+# タスクをファイルに保存・読み込みできるようにしよう
+#
+# 2. load_tasks(filename) という関数を作る
+#    - ファイルを読み込み、todo_list に復元する
+#    - ファイルが存在しない場合はエラーにならないようにする
+#
+# 3. 動作確認
+#    - タスクをいくつか追加して保存
+#    - プログラムを終了（仮定）
+#    - load_tasks() で復元して、タスクがきちんと残っていることを確認
+#
+# --- ヒント ---
+# import json を使おう
+# with open(filename, "w", encoding="utf-8") as f: でファイルに書き込みできる
+# with open(filename, "r", encoding="utf-8") as f: でファイルを読み込みできる
+
+import json
+
+def save_tasks(filename):
+    with open(filename, "w", encoding="utf-8") as f:
+        json.dump(todo_list, f, ensure_ascii=False, indent=2)
+    print(f"{filename}に保存しました")
+
+def load_tasks(filename):
+    global todo_list
+    try:
+        with open(filename, "r", encoding="utf-8") as f:
+            todo_list = json.load(f)
+        print(f"{filename}の内容を復元しました")
+    except FileNotFoundError:
+        print("ファイルが存在しませんでした")
+    except Exception as e:
+        print(f"読み込みエラー: {e}")
+
+
+
 
 # 動作確認
 add_task("買い物に行く", "2025-08-17")
@@ -106,3 +143,7 @@ show_tasks()
 show_done_tasks()
 show_pending_tasks()
 search_tasks("Python")
+
+save_tasks("todo_list.txt")
+load_tasks("todo_list.txt")
+load_tasks("aaa.txt")
