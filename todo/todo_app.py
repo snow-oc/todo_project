@@ -85,23 +85,6 @@ def search_tasks(keyword):
     if not found:
         print("該当するタスクはありません")
 
-# --- 課題⑩ ---
-# タスクをファイルに保存・読み込みできるようにしよう
-#
-# 2. load_tasks(filename) という関数を作る
-#    - ファイルを読み込み、todo_list に復元する
-#    - ファイルが存在しない場合はエラーにならないようにする
-#
-# 3. 動作確認
-#    - タスクをいくつか追加して保存
-#    - プログラムを終了（仮定）
-#    - load_tasks() で復元して、タスクがきちんと残っていることを確認
-#
-# --- ヒント ---
-# import json を使おう
-# with open(filename, "w", encoding="utf-8") as f: でファイルに書き込みできる
-# with open(filename, "r", encoding="utf-8") as f: でファイルを読み込みできる
-
 import json
 
 def save_tasks(filename):
@@ -120,8 +103,15 @@ def load_tasks(filename):
     except Exception as e:
         print(f"読み込みエラー: {e}")
 
+def sort_tasks_by_deadline():
+    print("期限順にソートします")
+    for task, detail in sorted(todo_list.items(), key= lambda task: task[1]["deadline"]):
+        print(f"[{'✓' if detail['done'] else ' '}] タスク: {task}, 期限: {detail['deadline']}")
 
-
+def sort_tasks_by_name():
+    print("名前順にソートします")
+    for task, detail in sorted(todo_list.items(), key= lambda task: task[0]):
+        print(f"[{'✓' if detail['done'] else ' '}] タスク: {task}, 期限: {detail['deadline']}")
 
 # 動作確認
 add_task("買い物に行く", "2025-08-17")
@@ -138,12 +128,15 @@ check_upcoming(3)
 edit_task("仕事", new_task="Python勉強")
 edit_task("デート", new_task="Python勉強")
 edit_task("Python勉強", new_deadline="2025-09-01")
-edit_task(old_task="ゲーム", new_task="アクションゲーム", new_deadline="2025-09-20")
+edit_task(old_task="ゲーム", new_task="アクションゲーム", new_deadline="2025-08-15")
 show_tasks()
 show_done_tasks()
 show_pending_tasks()
 search_tasks("Python")
 
-save_tasks("todo_list.txt")
-load_tasks("todo_list.txt")
-load_tasks("aaa.txt")
+sort_tasks_by_deadline()
+sort_tasks_by_name()
+
+# save_tasks("todo_list.txt")
+# load_tasks("todo_list.txt")
+# load_tasks("aaa.txt")
