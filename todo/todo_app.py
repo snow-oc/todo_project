@@ -48,16 +48,96 @@ def check_upcoming(days):
     else:
         print("期限が近いタスクはありません")
 
+def edit_task(old_task, new_task=None, new_deadline=None):
+    if old_task not in todo_list:
+        print("そのタスクは見つかりません")
+        return
+    if new_task:
+        todo_list[new_task] = todo_list.pop(old_task)
+        print(f"タスク '{old_task}' を '{new_task}' へ更新しました")
+    if new_deadline:
+        target = new_task or old_task
+        todo_list[target]["deadline"] = new_deadline
+        print(f"タスク '{target}' の期限を {new_deadline} へ更新しました")
+
+def show_done_tasks():
+    done_task_list = [(task, detail) for task, detail in todo_list.items() if detail["done"]]
+    if done_task_list:
+        for task, detail in done_task_list:
+            print(f"[✓] タスク: {task}, 期限: {detail['deadline']}")
+    else:
+        print("完了のタスクはありません")
+
+def show_pending_tasks():
+    pending_task_list = [(task, detail) for task, detail in todo_list.items() if not detail["done"]]
+    if pending_task_list:
+        for task, detail in pending_task_list:
+            print(f"[ ] タスク: {task}, 期限: {detail['deadline']}")
+    else:
+        print("未完了のタスクはありません")
+
+def search_tasks(keyword):
+    found = False
+    for task, task_detail in todo_list.items():
+        if keyword in task:
+            print(f"[{'✓' if task_detail['done'] else ' '}] タスク: {task}, 期限: {task_detail['deadline']}")
+            found = True
+    if not found:
+        print("該当するタスクはありません")
+
+import json
+
+def save_tasks(filename):
+    with open(filename, "w", encoding="utf-8") as f:
+        json.dump(todo_list, f, ensure_ascii=False, indent=2)
+    print(f"{filename}に保存しました")
+
+def load_tasks(filename):
+    global todo_list
+    try:
+        with open(filename, "r", encoding="utf-8") as f:
+            todo_list = json.load(f)
+        print(f"{filename}の内容を復元しました")
+    except FileNotFoundError:
+        print("ファイルが存在しませんでした")
+    except Exception as e:
+        print(f"読み込みエラー: {e}")
+
+def sort_tasks_by_deadline():
+    print("期限順にソートします")
+    for task, detail in sorted(todo_list.items(), key= lambda task: task[1]["deadline"]):
+        print(f"[{'✓' if detail['done'] else ' '}] タスク: {task}, 期限: {detail['deadline']}")
+
+def sort_tasks_by_name():
+    print("名前順にソートします")
+    for task, detail in sorted(todo_list.items(), key= lambda task: task[0]):
+        print(f"[{'✓' if detail['done'] else ' '}] タスク: {task}, 期限: {detail['deadline']}")
 
 # 動作確認
-add_task("買い物に行く", "2025-08-17")
-add_task("読書をする", "2025-08-16")
-add_task("デート", "2025-08-20")
-add_task("ゲーム", "2025-08-21")
-show_tasks()
-check_deadlines()
-mark_done("読書をする")
-show_tasks()
-remove_task("買い物に行く")
-remove_task("サッカー観戦")
-check_upcoming(3)
+if __name__ == "__main__":
+    add_task("買い物に行く", "2025-08-17")
+    add_task("読書をする", "2025-08-16")
+    add_task("デート", "2025-08-20")
+    add_task("ゲーム", "2025-08-21")
+    show_tasks()
+    check_deadlines()
+    mark_done("読書をする")
+    show_tasks()
+    remove_task("買い物に行く")
+    remove_task("サッカー観戦")
+    check_upcoming(3)
+    edit_task("仕事", new_task="Python勉強")
+    edit_task("デート", new_task="Python勉強")
+    edit_task("Python勉強", new_deadline="2025-09-01")
+    edit_task(old_task="ゲーム", new_task="アクションゲーム", new_deadline="2025-08-15")
+    show_tasks()
+    show_done_tasks()
+    show_pending_tasks()
+    search_tasks("Python")
+
+    sort_tasks_by_deadline()
+    sort_tasks_by_name()
+
+    # save_tasks("todo_list.txt")
+    # load_tasks("todo_list.txt")
+    # load_tasks("aaa.txt")
